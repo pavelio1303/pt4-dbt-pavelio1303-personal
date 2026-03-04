@@ -1,0 +1,36 @@
+name: 'pt4_online_store'
+version: '1.0'
+config-version: 2
+
+profile: 'default'
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  pt4_online_store:
+    
+    # 🥈 Silver Layer
+    silver:
+      +materialized: view
+    
+    # 🥇 Gold Layer (marts)
+    gold:
+      +materialized: table
+
+seeds:
+  pt4_online_store:
+    +schema: seeds
+
+snapshots:
+  pt4_online_store:
+    +target_schema: snapshots
