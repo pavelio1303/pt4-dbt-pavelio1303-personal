@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: bronze_online_store
+    database: PT4_DBT
+    schema: BRONZE
+    tables:
+      - name: raw_customers
+        description: "Datos maestros de clientes (Batch 1 + Batch 2 Replace)"
+      - name: raw_products
+        description: "Catálogo de productos (Batch 1 + Batch 2 Replace)"
+      - name: raw_orders
+        description: "Cabeceras de pedidos (Append-only)"
+      - name: raw_order_lines
+        description: "Detalle de líneas de pedido (Append-only)"
+      - name: raw_order_events
+        description: "Historial de estados de pedidos (Append-only)"

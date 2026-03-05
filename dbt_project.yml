@@ -17,20 +17,22 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  pt4_online_store:
-    
-    # 🥈 Silver Layer
+  pt4_dbt:
+    +database: PT4_DBT
     silver:
       +materialized: view
-    
-    # 🥇 Gold Layer (marts)
+      +schema: silver   # Recomendado para que se guarde en el esquema SILVER
     gold:
       +materialized: table
+      +schema: gold     # Recomendado para que se guarde en el esquema GOLD
 
 seeds:
-  pt4_online_store:
+  pt4_dbt:
+    +database: PT4_DBT
     +schema: seeds
+    +quote_columns: false
 
 snapshots:
-  pt4_online_store:
+  pt4_dbt:
+    +database: PT4_DBT
     +target_schema: snapshots
