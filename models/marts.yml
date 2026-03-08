@@ -2,25 +2,29 @@ version: 2
 
 models:
   - name: fct_sales_line
-    description: Fact table for sales lines
+    description: "Tabla de hechos que contiene el detalle de cada línea de venta. Es un modelo incremental basado en loaded_at."
     columns:
       - name: sales_line_id
+        description: "Clave primaria de la tabla. Generada mediante un hash MD5 de order_id y line_number."
         tests:
           - unique
           - not_null
 
       - name: order_id
+        description: "Identificador único de la cabecera del pedido."
         tests:
           - not_null
 
       - name: product_id
+        description: "Clave foránea que conecta con la dimensión de productos."
         tests:
           - relationships:
-              arguments: # Asegúrate de que haya 2 espacios aquí
+              arguments:
                 to: "{{ ref('dim_products') }}"
                 field: product_id
 
       - name: customer_id
+        description: "Clave foránea que identifica al cliente que realizó la compra."
         tests:
           - relationships:
               arguments:
@@ -28,43 +32,53 @@ models:
                 field: customer_id
 
       - name: date_key
+        description: "Clave de fecha (YYYY-MM-DD) vinculada a la dimensión temporal."
         tests:
           - relationships:
-              arguments: # Corregido: ahora alineado con los anteriores
+              arguments:
                 to: "{{ ref('dim_date') }}"
                 field: date_key
 
       - name: channel_key
+        description: "Clave hash que identifica el canal de venta (Web, App, Store)."
         tests:
           - relationships:
-              arguments: # Corregido: ahora alineado con los anteriores
+              arguments:
                 to: "{{ ref('dim_channel') }}"
                 field: channel_key
 
   - name: dim_products
+    description: "Dimensión que contiene el catálogo de productos."
     columns:
       - name: product_id
+        description: "Identificador único del producto."
         tests:
           - unique
           - not_null
 
   - name: dim_customers
+    description: "Dimensión de clientes con información demográfica y de contacto."
     columns:
-      - name: customer_id # Cambiado de customer_key a customer_id para que el test de fct funcione
+      - name: customer_id
+        description: "Identificador único del cliente."
         tests:
           - unique
           - not_null
 
   - name: dim_channel
+    description: "Dimensión maestra de canales de venta."
     columns:
       - name: channel_key
+        description: "Hash único del código de canal."
         tests:
           - unique
           - not_null
 
   - name: dim_date
+    description: "Dimensión de tiempo para análisis histórico y estacional."
     columns:
       - name: date_key
+        description: "Fecha en formato DATE utilizada como clave única."
         tests:
           - unique
           - not_null
