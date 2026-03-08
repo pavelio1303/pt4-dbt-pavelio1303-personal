@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: bronze_online_store
+  - name: bronze
     database: PT4_DBT
     schema: BRONZE
     tables:
