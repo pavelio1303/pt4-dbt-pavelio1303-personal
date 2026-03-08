@@ -5,54 +5,41 @@
 ) }}
 
 WITH order_lines AS (
-
     SELECT *
     FROM {{ ref('stg_order_lines') }}
-
     {% if is_incremental() %}
         WHERE loaded_at > (SELECT MAX(loaded_at) FROM {{ this }})
     {% endif %}
-
 ),
 
 orders AS (
-
     SELECT *
     FROM {{ ref('stg_orders') }}
-
 ),
 
 customers AS (
-
     SELECT *
     FROM {{ ref('snapshot_customers') }}
     WHERE dbt_valid_to IS NULL
-
 ),
 
 products AS (
-
     SELECT *
     FROM {{ ref('dim_products') }}
-
 ),
 
 channels AS (
-
     SELECT *
     FROM {{ ref('dim_channel') }}
-
 ),
 
 dates AS (
-
     SELECT *
     FROM {{ ref('dim_date') }}
-
 )
 
 SELECT
-    -- Llave subrogada única para el modelo incremental
+    -- Llave subrogada única
     MD5(
         CAST(
             COALESCE(CAST(ol.order_id AS VARCHAR),'')
@@ -64,15 +51,12 @@ SELECT
     ol.order_id,
     p.product_id,
     c.customer_id,
-
-    -- Renombramos explícitamente para que coincida con tu YAML y tus dimensiones
     d.date_key,
     ch.channel_key,
 
     ol.quantity,
     ol.unit_price,
     ol.quantity * ol.unit_price AS line_amount,
-
     ol.loaded_at
 
 FROM order_lines ol
